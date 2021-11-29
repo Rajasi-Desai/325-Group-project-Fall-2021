@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "password",
+    "password": "ArkhamSkyline@2021",
     "database": "TutorialDB",
     "host": "localhost",
     "dialect": "mysql"
