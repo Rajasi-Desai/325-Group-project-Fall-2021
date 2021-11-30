@@ -96,32 +96,33 @@ function Home() {
                     </Tabs>
                 </div>
                 <div className="middleHome">
-                    {listOfPosts.map((value, key) => { // value = every object in listOfPosts
-                        return (
-                        <div className="post"> 
-                            <div className="title">{value.title}</div>
-                            <div className="body" onClick={() => {navigate(`/post/${value.id}`)}}>{value.postText}</div>
-                            <div className="footer">
-                                <div className="username">
-                                    <Link to={`/profile/${value.UserId}`}>{value.username}</Link>
-                                </div>
-                                <div className="buttons">
-                                    <ThumbUpAltIcon
-                                        onClick={() => {
-                                            likeAPost(value.id);
-                                        }}
-                                        className={likedPosts.includes(value.id) ? "unlikeBttn" : "likeBttn"}
-                                    />
-                                    <label> {value.Likes.length}</label>
+                    {listOfPosts
+                        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+                        .map((value, key) => { // value = every object in listOfPosts
+                            return (
+                            <div className="post"> 
+                                <div className="title">{value.postType}: {value.title}</div>
+                                <div className="body" onClick={() => {navigate(`/post/${value.id}`)}}>{value.postText}</div>
+                                <div className="footer">
+                                    <div className="username">
+                                        <p onClick={() => {navigate(`/profile/${value.UserId}`)}}>{value.username}</p>
+                                    </div>
+                                    <div className="buttons">
+                                        <ThumbUpAltIcon
+                                            onClick={() => {
+                                                likeAPost(value.id);
+                                            }}
+                                            className={likedPosts.includes(value.id) ? "unlikeBttn" : "likeBttn"}
+                                        />
+                                        <label> {value.Likes.length}</label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        );
-                    })}
+                            );
+                        }
+                    )}
                 </div>
-                <div className="rightHome">
-                    Profile
-                </div>
+                <div className="rightHome"></div>
             </div>
         </div>
     )

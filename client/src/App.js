@@ -42,6 +42,7 @@ function App() {
     });
   }, []);
 
+  // Function to log user out of their account
   const logout = () => {
     localStorage.removeItem("accessToken");
     setAuthState({
@@ -71,8 +72,9 @@ function App() {
               )}
             </div>
             <div className="loggedInContainer">
+              {/* <Link to={'/profile/${authState.id}'}>{authState.username}</Link> */}
               <h1>{authState.username} </h1>
-              {authState.status && <button onClick={logout}> Logout</button>}
+              {authState.status && <button onClick={logout}>Logout</button>}
             </div>
           </div>
           <Routes>

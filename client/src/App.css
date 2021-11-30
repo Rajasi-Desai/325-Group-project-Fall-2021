@@ -58,6 +58,10 @@ body {
 
 .footer .username {
   flex: 50%;
+  color: white;
+}
+.footer .username:hover {
+   color: gray;
 }
 .footer .buttons {
   flex: 50%;

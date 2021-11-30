@@ -4,6 +4,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    section: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    postType: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     postText: {
       type: DataTypes.STRING,
       allowNull: false,

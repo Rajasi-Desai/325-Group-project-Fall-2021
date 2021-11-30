@@ -45,6 +45,20 @@ router.put("/title", validateToken, async (req, res) => {
   res.json(newTitle);
 });
 
+// PUT Request (Update section of post)
+router.put("/section", validateToken, async (req, res) => {
+  const {newSection, id} = req.body;
+  await Posts.update({section: newSection}, {where: {id: id}}); // Update post table in db with new section, given id
+  res.json(newSection);
+});
+
+// PUT Request (Update type of post)
+router.put("/postType", validateToken, async (req, res) => {
+  const {newType, id} = req.body;
+  await Posts.update({postType: newType}, {where: {id: id}}); // Update post table in db with new type, given id
+  res.json(newType);
+});
+
 // PUT Request (Update content/text of post)
 router.put("/postText", validateToken, async (req, res) => {
   const {newText, id} = req.body;

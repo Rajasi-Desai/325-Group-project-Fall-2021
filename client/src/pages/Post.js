@@ -64,42 +64,103 @@ function Post() {
     
     // Function to edit post
     const editPost = (option) => {
-        if (option === "title") { // Edit title
-            let newTitle = prompt("Enter New Title:");
-            axios.put(
-                "http://localhost:3001/posts/title", 
-                {
-                    newTitle: newTitle, 
-                    id: id, 
-                }, 
-                {
-                    headers: {accessToken: localStorage.getItem("accessToken")},
-                }
-            );
+        try {
+            if (option === "title") { // Edit title
+                let newTitle = prompt("Enter New Title:");
+                if (newTitle.length === 0) throw "No title input";
 
-            // Update changes on page after submission
-            setPostObject({...postObject, title: newTitle}); // Only update title on page
-        } else {  // Otherwise, edit body
-            let newPostText = prompt("Enter New Text:");
-            axios.put(
-                "http://localhost:3001/posts/postText", 
-                {
-                    newText: newPostText, 
-                    id: id, 
-                }, 
-                {
-                    headers: {accessToken: localStorage.getItem("accessToken")},
-                }
-            );
+                axios.put(
+                    "http://localhost:3001/posts/title", 
+                    {
+                        newTitle: newTitle, 
+                        id: id, 
+                    }, 
+                    {
+                        headers: {accessToken: localStorage.getItem("accessToken")},
+                    }
+                );
+    
+                // Update changes on page after submission
+                setPostObject({...postObject, title: newTitle}); // Only update title on page
+            } else if (option === "section") { // Edit section
+                let newSection = prompt("Enter New Section:");
+                if (newSection.length === 0) throw "No section input";
 
-            // Update changes on page after submission
-            setPostObject({...postObject, postText: newPostText}); // Only update post on page
+                axios.put(
+                    "http://localhost:3001/posts/section", 
+                    {
+                        newSection: newSection, 
+                        id: id, 
+                    }, 
+                    {
+                        headers: {accessToken: localStorage.getItem("accessToken")},
+                    }
+                );
+    
+                // Update changes on page after submission
+                setPostObject({...postObject, section: newSection}); // Only update section on page
+            } else if (option === "postType") { // Edit type of post
+                let newType = prompt("Enter New Type (Note, Question, Other):");
+                if (newType.length === 0) throw "No type input";
+
+                axios.put(
+                    "http://localhost:3001/posts/postType", 
+                    {
+                        newType: newType, 
+                        id: id, 
+                    }, 
+                    {
+                        headers: {accessToken: localStorage.getItem("accessToken")},
+                    }
+                );
+    
+                // Update changes on page after submission
+                setPostObject({...postObject, postType: newType}); // Only update type on page
+            } else 
+            {  // Otherwise, edit body of post
+                let newPostText = prompt("Enter New Text:");
+                if (newPostText.length === 0) throw "No text input";
+
+                axios.put(
+                    "http://localhost:3001/posts/postText", 
+                    {
+                        newText: newPostText, 
+                        id: id, 
+                    }, 
+                    {
+                        headers: {accessToken: localStorage.getItem("accessToken")},
+                    }
+                );
+    
+                // Update changes on page after submission
+                setPostObject({...postObject, postText: newPostText}); // Only update post on page
+            }
+        } catch (ex) {
+            // Catch error if there is no input inside any prompts to prevent issues
         }
     };
 
     return (
         <div className="postPage">
             <div className="leftSide">
+                <div 
+                    className="postType"
+                    onClick={() => {
+                        if (authState.username === postObject.username) {
+                            editPost("postType");
+                        }
+                    }}
+                >{postObject.postType}</div>
+
+                <div 
+                    className="section"
+                    onClick={() => {
+                        if (authState.username === postObject.username) {
+                            editPost("section");
+                        }
+                    }}
+                >{postObject.section}</div>
+                
                 <div className="post" id="individual">
                     <div 
                         className="title"
