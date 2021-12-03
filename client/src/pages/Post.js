@@ -193,14 +193,19 @@ function Post() {
                     <button onClick={addComment}>Add Comment</button>
                 </div>
                 <div className="listOfComments">
-                    {comments.map((comment, key) => {
-                        return (
-                            <div key={key} className="comment"> 
-                                {comment.commentBody} 
-                                <label> Username: {comment.username}</label>
-                                {authState.username === comment.username && <button onClick={() => {deleteComment(comment.id)}}>X</button>}
-                            </div>
-                        );
+                    {comments
+                        // .sort((a, b) => b.createdAt.localeCompare(a.createdAt)) // Sort latest comment on top
+                        .map((comment, key) => {
+                            let date = new Date(comment.createdAt); // Get date of comment's creation
+                            return (
+                                <div key={key} className="comment"> 
+                                    {comment.commentBody} 
+                                    <label> Username: {comment.username}</label>
+                                    <label> Date: {date.toDateString()}</label>
+                                    <label> Time: {date.toLocaleTimeString()}</label>
+                                    {authState.username === comment.username && <button onClick={() => {deleteComment(comment.id)}}>X</button>}
+                                </div>
+                            );
                     })}
                 </div>
             </div>

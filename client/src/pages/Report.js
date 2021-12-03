@@ -22,7 +22,9 @@ function Report() {
 
     // Submit function that will make api call to POST data into database
     const onSubmit = (data) => {
-        axios.post("http://localhost:3001/reports", data).then((response) => {
+        axios.post("http://localhost:3001/reports", data, {
+            headers: { accessToken: localStorage.getItem("accessToken") },
+        }).then((response) => {
             navigate("/"); // Navigate back to home page
         });
     };

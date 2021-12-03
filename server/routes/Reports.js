@@ -18,9 +18,19 @@ router.get("/:postId", async (req, res) => {
     res.json(listOfReports); // Return response in form of json
 });
 
+// GET Request (Gets all reports from database by userId)
+router.get("/:userId", async (req, res) => {
+  const userId = req.params.userId; // Get Id of user
+  const listOfReports = await Reports.findAll({ where: { UserId: userId } }); // Get reports with userId from table
+  res.json(listOfReports); // Return response in form of json
+});
+
 // POST Request (Make/File report and add it to database)
+// TODO: Need to assign PostId and UserId
 router.post("/", validateToken, async (req, res) => {
   const report = req.body; // Access data from req.body
+  // report.PostId = req.post.id; // Get postId
+  // report.UserId = req.user.id; // Get userId
   await Reports.create(report); // Add report data into database (await to make sure all data is inserted into database before proceeding)
   res.json(report); // Return response in form of json
 });

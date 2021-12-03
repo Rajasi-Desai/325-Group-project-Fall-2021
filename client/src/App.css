@@ -59,6 +59,7 @@ body {
 .footer .username {
   flex: 50%;
   color: white;
+  text-decoration: underline;
 }
 .footer .username:hover {
    color: gray;
@@ -212,26 +213,20 @@ span {
 
 .leftHome {
   flex: 20%;
-  /* height: calc(100vh - 70px); */
-  /* display: grid; */
-  /* place-items: start; */
-  /* justify-items: start; */
   position: fixed;
   left:10px
 }
 
+.leftHomeBttnCol {
+  top:10px;
+}
+
 .middleHome {
   flex: 60%;
-  /* height: calc(100vh - 70px);
-  display: grid;
-  place-items: center; */
 }
 
 .rightHome {
   flex: 20%;
-  /* height: calc(100vh - 70px);
-  display: grid;
-  place-items: end; */
   position: fixed;
   right:10px
 }

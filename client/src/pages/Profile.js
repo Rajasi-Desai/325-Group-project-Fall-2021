@@ -11,7 +11,7 @@ function Profile() {
     const {authState} = useContext(AuthContext); // Get state of authorization
     let navigate = useNavigate(); // Navigate to specific posts
 
-    useEffect(() => {
+    useEffect(() => { // When page rerenders, 
         axios.get(`http://localhost:3001/auth/basicinfo/${id}`).then((response) => { // Get basic info on user from db
             setUsername(response.data.username);
         });

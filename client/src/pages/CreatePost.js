@@ -17,7 +17,6 @@ function CreatePost() {
 
     useEffect(() => {
         if (!localStorage.getItem("accessToken")) {
-            // history.pushState("/login");
             navigate("/login");
         }
     }, []);
@@ -75,7 +74,7 @@ function CreatePost() {
                         <option value="CS-121">CS-121</option>
                         <option value="CS-186">CS-186</option>
                         <option value="CS-187">CS-187</option>
-                        <option value="CS-220">CS-186</option>
+                        <option value="CS-220">CS-220</option>
                         <option value="CS-230">CS-230</option>
                         <option value="Interview">Interview</option>
                     </Field>

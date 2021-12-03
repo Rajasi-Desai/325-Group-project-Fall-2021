@@ -23,11 +23,18 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Posts.associate = (models) => {
+    // PostId for given comment (which post is the comment for)
     Posts.hasMany(models.Comments, { // Get all comments from db associated with given post
       onDelete: "cascade", // If post is deleted, then all comments on post get deleted
     });
     
+    // PostId for given like (who liked which post)
     Posts.hasMany(models.Likes, { // Get all likes from db associated with given post
+      onDelete: "cascade", // If post is deleted, then all comments on post get deleted
+    });
+
+    // PostId for given report (which post is the report for)
+    Posts.hasMany(models.Reports, { // Get all reports from db associated with given post
       onDelete: "cascade", // If post is deleted, then all comments on post get deleted
     });
   }

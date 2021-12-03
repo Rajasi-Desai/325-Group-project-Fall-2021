@@ -2,11 +2,12 @@ import React from 'react'
 import axios from "axios"; // Library to make api calls
 import { useEffect, useState } from "react"; // Allows us to run function immediately when page rerenders
 import { Link, useNavigate } from 'react-router-dom';
-import Tabs, { TabPane } from 'rc-tabs';
+import { Button, ButtonGroup } from 'react-bootstrap';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 
 function Home() {
     const [listOfPosts, setListOfPosts] = useState([]); // Constants that has list of posts, and change/set list of posts; initially set as empty []
+    const [listOfFilteredPosts, setListOfFilteredPosts] = useState(listOfPosts); // Constants that has list of posts, and change/set list of posts; initially set as empty []
     const [likedPosts, setLikedPosts] = useState([]); // Constants that has list of likes, and change/set list of likes; initially set as empty []
 
     let navigate = useNavigate();
@@ -14,13 +15,14 @@ function Home() {
     useEffect(() => { // When page rerenders, 
         // Want to run GET request from backend's 3001/posts to get data, then
         axios
-            .get("http://localhost:3001/posts", {
+            .get("http://localhost:3001/posts", { // Authenticate
                 headers: {accessToken: localStorage.getItem("accessToken")},
             })
             .then((response) => {
+                // Get list of post and list of likes for each post
                 setListOfPosts(response.data.listOfPosts);
+                setListOfFilteredPosts(response.data.listOfPosts);
                 setLikedPosts(response.data.likedPosts);
-                // console.log(response.data.likedPosts);
                 setLikedPosts(
                     response.data.likedPosts.map((like) => {
                         return like.PostId;
@@ -28,11 +30,6 @@ function Home() {
                 );
             });
     }, []); // Run once when page is refreshed ([] = empty list of dependencies/states)
-
-    // Show change in filter for tabs on left
-    function callback(e) {
-        console.log(e);
-    };
 
     // Function to add/remove like to post
     const likeAPost = (postId) => {
@@ -67,38 +64,35 @@ function Home() {
         });
     };
 
+    // Function to filter feed of posts based on the Section
+    const filterFeed = (sect) => {
+        // If we want to filter feed specifically
+        if (sect.toString().length > 0) {
+            setListOfFilteredPosts(listOfPosts.filter(post => post.section.toString() === sect.toString()));
+        } else {
+            // Otherwise, show all posts
+            setListOfFilteredPosts(listOfPosts); 
+        }
+    };
+
     return (
         <div>
             <div className="postPage">
                 <div className="leftHome">
-                    <Tabs defaultActiveKey="0" onChange={callback}>
-                        <TabPane tab="Home" key="0">
-                        
-                        </TabPane>
-                        <TabPane tab="CS-121" key="1">
-                        
-                        </TabPane>
-                        <TabPane tab="CS-186" key="2">
-                        
-                        </TabPane>
-                        <TabPane tab="CS-187" key="3">
-                        
-                        </TabPane>
-                        <TabPane tab="CS-220" key="4">
-                        
-                        </TabPane>
-                        <TabPane tab="CS-230" key="5">
-                        
-                        </TabPane>
-                        <TabPane tab="Interview" key="6">
-                        
-                        </TabPane>
-                    </Tabs>
+                    <ButtonGroup className="leftHomeBttnCol" vertical>
+                        <Button onClick={() => filterFeed("")}>Home</Button>
+                        <Button onClick={() => filterFeed("CS-121")}>CS-121</Button>
+                        <Button onClick={() => filterFeed("CS-186")}>CS-186</Button>
+                        <Button onClick={() => filterFeed("CS-187")}>CS-187</Button>
+                        <Button onClick={() => filterFeed("CS-220")}>CS-220</Button>
+                        <Button onClick={() => filterFeed("CS-230")}>CS-230</Button>
+                        <Button onClick={() => filterFeed("Interview")}>Interview</Button>
+                    </ButtonGroup>
                 </div>
                 <div className="middleHome">
-                    {listOfPosts
-                        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-                        .map((value, key) => { // value = every object in listOfPosts
+                    {listOfFilteredPosts
+                        .sort((a, b) => b.createdAt.localeCompare(a.createdAt)) // Sort posts so latest one shows up on top
+                        .map((value) => { // value = every object in listOfPosts
                             return (
                             <div className="post"> 
                                 <div className="title">{value.postType}: {value.title}</div>
