@@ -52,6 +52,13 @@ function Post() {
         window.location.reload(false); // Reload page
     };
 
+    // Function to login via "Enter" key
+    const onEnterKey = (event) => {
+        if(event.key === 'Enter'){
+            addComment();
+        }
+    };
+
     // Delete comment function (given the id of the comment)
     const deleteComment = (id) => { 
         axios
@@ -192,16 +199,8 @@ function Post() {
 
                 <button onClick={() => {
                     sessionStorage.setItem("PostId", id);
-                    navigate('/reports/');
+                    navigate('/reports');
                 }}>Report Post</button>
-                {/* <button 
-                    onClick={() => {
-                        navigate({
-                            pathname: '/reports',
-                            state: id
-                        })
-                    }}>Report Post
-                </button> */}
             </div>
             <div className="rightSide">
                 <div className="addCommentContainer">
@@ -211,6 +210,7 @@ function Post() {
                         autoComplete="off" 
                         value={newComment}
                         onChange={(event) => {setNewComment(event.target.value)}}
+                        onKeyPress={onEnterKey}
                     />
                     <button onClick={addComment}>Add Comment</button>
                 </div>

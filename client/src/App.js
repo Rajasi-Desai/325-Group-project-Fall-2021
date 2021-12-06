@@ -68,7 +68,6 @@ function App() {
                 <>
                   <Link to="/">Home Page</Link>
                   <Link to="/createpost">Create Post</Link>
-                  {/* <Link to="/reports">Report</Link> */}
                 </>
               )}
             </div>
@@ -83,7 +82,7 @@ function App() {
             <Route path="/post/:id" element={<Post/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/registration" element={<Registration/>}/>
-            {/* <Route path="/reports" element={<Report/>}/> */}
+            <Route path="/reports" element={<Report/>}/>
             <Route path="/profile/:id" element={<Profile/>}/>
             <Route path="/changepassword" element={<ChangePassword/>}/>
             <Route path="*" element={<PageNotFound/>}/>

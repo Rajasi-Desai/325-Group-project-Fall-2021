@@ -43,40 +43,27 @@ function Home() {
 
     // Function to add/remove like to post
     const likeAPost = (postId) => {
-        // var likedList = likedPosts.length;
-        // console.log("likedPosts length before axios call: " + likedList);
-
         axios.post(
             "http://localhost:3001/likes", 
             {PostId: postId}, 
             {headers: {accessToken: localStorage.getItem("accessToken")}}
         ).then((response) => {
-            const postLikesList = [];
-            var index = 0;
             // Modify list of likes in the list of filtered posts
-            setListOfFilteredPosts(listOfPosts.map((post) => {
+            setListOfFilteredPosts(listOfFilteredPosts.map((post) => {
                 if (post.id === postId) { // Find the post that we are interacting with by id
                     if (response.data.liked) { // If the post has been liked by user,
-                        postLikesList[index] = post.Likes.length + 1;
-                        index++;
-
+                        sessionStorage.setItem("LikedPostId", postId);
                         return {...post, Likes: [...post.Likes, 0] }; // Add like (and leave anything else on post as is); Note: we are adding zero just to change size
                     } 
                     else { // Otherwise, remove like since the post is being unliked
                         const likesArray = post.Likes;
                         likesArray.pop();
-
-                        postLikesList[index] = post.Likes.length - 1;
-                        index++;
-
                         return {...post, Likes: likesArray};
                     }
                 } else { // Otherwise, ignore post
                     return post;
                 }
             }));
-
-            console.log("postLikesList: " + postLikesList.length);
 
             // Modify list of likes in the list of unfiltered posts
             setListOfPosts(listOfPosts.map((post) => {
@@ -105,52 +92,49 @@ function Home() {
             }
         });
 
-        // likedList = likedPosts.length;
-        // console.log("likedPosts length after axios call: " + likedList);
-
-        if (false) { // If the post has been liked, then we need to check if "Dislike" is on 
-            axios.post(
-                "http://localhost:3001/dislikes", 
-                {PostId: postId}, 
-                {headers: {accessToken: localStorage.getItem("accessToken")}}
-            ).then((response) => {
-                // Modify list of dislikes in the list of filtered posts
-                setListOfFilteredPosts(listOfPosts.map((post) => {
-                    if (post.id === postId) { // Find the post that has the id we want
-                        if (!response.data.disliked) { // If the post already has dislike, then we remove it; otherwise, ignore 
-                            const dislikesArray = post.Dislikes;
-                            dislikesArray.pop();
-                            return {...post, Dislikes: dislikesArray};
-                        }
-                    } else {
-                        return post;
-                    }
-                }));
+        // if (sessionStorage.getItem("LikedPostId") !== null) { // If the post has been liked, then we need to check if "Dislike" is on 
+        //     axios.post(
+        //         "http://localhost:3001/dislikes", 
+        //         {PostId: postId}, 
+        //         {headers: {accessToken: localStorage.getItem("accessToken")}}
+        //     ).then((response) => {
+        //         // Modify list of dislikes in the list of filtered posts
+        //         setListOfFilteredPosts(listOfFilteredPosts.map((post) => {
+        //             if (post.id === postId) { // Find the post that has the id we want
+        //                 if (response.data.disliked) { // If the post already has dislike, then we remove it; otherwise, ignore 
+        //                     const dislikesArray = post.Dislikes;
+        //                     dislikesArray.pop();
+        //                     return {...post, Dislikes: dislikesArray};
+        //                 }
+        //             } else {
+        //                 return post;
+        //             }
+        //         }));
     
-                // Modify list of dislikes in the list of unfiltered posts
-                setListOfPosts(listOfPosts.map((post) => {
-                    if (post.id === postId) { // Find the post that has the id we want
-                        if (!response.data.disliked) { // If the post already has dislike, then we remove it; otherwise, ignore 
-                            const dislikesArray = post.Dislikes;
-                            dislikesArray.pop();
-                            return {...post, Dislikes: dislikesArray};
-                        }
-                    } else {
-                        return post;
-                    }
-                }));
+        //         // Modify list of dislikes in the list of unfiltered posts
+        //         setListOfPosts(listOfPosts.map((post) => {
+        //             if (post.id === postId) { // Find the post that has the id we want
+        //                 if (response.data.disliked) { // If the post already has dislike, then we remove it; otherwise, ignore 
+        //                     const dislikesArray = post.Dislikes;
+        //                     dislikesArray.pop();
+        //                     return {...post, Dislikes: dislikesArray};
+        //                 }
+        //             } else {
+        //                 return post;
+        //             }
+        //         }));
     
-                if (dislikedPosts.includes(postId)) { // If post has a dislike on it, then remove it from list to change color, indicating that dislike has been removed 
-                    setDislikedPosts(
-                        dislikedPosts.filter((id) => {
-                            return id !== postId;
-                        })
-                    );
-                } else {
-                    setDislikedPosts([...dislikedPosts, postId]); // Otherwise, add postId to the list, and it will change color of thumbs down icon to indicate dislike has been added
-                } 
-            });
-        }
+        //         if (dislikedPosts.includes(postId)) { // If post has a dislike on it, then remove it from list to change color, indicating that dislike has been removed 
+        //             setDislikedPosts(
+        //                 dislikedPosts.filter((id) => {
+        //                     return id !== postId;
+        //                 })
+        //             );
+        //         } else {
+        //             setDislikedPosts([...dislikedPosts, postId]); // Otherwise, add postId to the list, and it will change color of thumbs down icon to indicate dislike has been added
+        //         } 
+        //     });
+        // }
     };
 
     // Function to add/remove dislike to post
@@ -161,7 +145,7 @@ function Home() {
             {headers: {accessToken: localStorage.getItem("accessToken")}}
         ).then((response) => {
             // Modify list of dislikes in the list of filtered posts
-            setListOfFilteredPosts(listOfPosts.map((post) => {
+            setListOfFilteredPosts(listOfFilteredPosts.map((post) => {
                 if (post.id === postId) { // Find the post that has the id we want
                     if (response.data.disliked) { // If the post has been disliked by user
                         return {...post, Dislikes: [...post.Dislikes, 0]}; // Add dislike (and leave anything else on post as is)

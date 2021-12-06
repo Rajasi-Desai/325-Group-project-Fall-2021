@@ -224,7 +224,7 @@ span {
 }
 
 /* INDIVIDUAL POST */
-.postPage {
+.addcommentcontainer {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -404,23 +404,6 @@ span {
   font-size: 20px;
 }
 
-/* .addCommentContainer input {
-  width: 60%;
-  height: 200px;
-  border-radius: 8px;
-  border: none;
-  overflow: hidden;
-  resize: both;
-  display: block;
-} */
-
-/* .addCommentContainer button {
-  width: 60%;
-  height: 50px;
-  border-radius: 8px;
-  border: none;
-} */
-
 .leftSide button {
   width: 47%;
   height: 50px;
@@ -455,7 +438,7 @@ span {
 .rightSide .listOfComments {
   flex: 80%;
   width: 100%;
-  margin-top: 10%;
+  margin-top: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;

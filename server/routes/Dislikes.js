@@ -3,6 +3,9 @@ const router = express.Router(); // Access router from express
 const { Dislikes } = require("../models"); // Get instance of Posts in models folder
 const { validateToken } = require("../middlewares/AuthMiddleware"); // Get validateToken
 
+// GET request (Get dislike of post based on user)
+
+
 // POST request (Add/Remove dislike to post)
 router.post("/", validateToken, async (req, res) => {
     const {PostId} = req.body;

@@ -6,7 +6,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 function Report() {
     var id = 0;
-    const [postObject, setPostObject] = useState({}); // State hook to contain data to post on page
     let navigate = useNavigate();
     
     // Object that will store the data from inputs in form
@@ -49,8 +48,8 @@ function Report() {
                 onSubmit={onSubmit} 
                 validateSchema={validationSchema}
             >
-                {/* <label>Report Post</label> */}
                 <Form className="formContainer">
+                    <h1>Report</h1>
                     <h4>Report post for: </h4>
                     <ErrorMessage name="type" component="span" />
                     <Field 

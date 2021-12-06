@@ -55,6 +55,7 @@ function CreatePost() {
                 validateSchema={validationSchema}
             >
                 <Form className="formContainer">
+                    <h1>Create Post</h1>
                     <label>Title: </label>
                     <ErrorMessage name="title" component="span" />
                     <Field 

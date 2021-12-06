@@ -37,7 +37,7 @@ function ChangePassword() {
 
     return (
         <div className="loginContainer">
-          <h1>Change Your Password</h1>
+          <h1>Change Password</h1>
           <label>Old Password:</label>
           <input
             type="password"
