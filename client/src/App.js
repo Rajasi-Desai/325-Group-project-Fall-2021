@@ -1,6 +1,6 @@
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Home from "./pages/Home"; // Access Home.js
 import CreatePost from "./pages/CreatePost"; // Access CreatePost.js
@@ -17,6 +17,7 @@ import {useState, useEffect} from "react";
 import axios from 'axios';
 
 function App() {
+  
   // See if we are logged in or not (authState), and be able to change that state if we do log in (setAuthState)
   const [authState, setAuthState] = useState({
     username: "", 
@@ -25,16 +26,15 @@ function App() {
   });
 
   useEffect(() => {
-    axios.get(
-      "http://localhost:3001/auth/auth", { 
+    axios.get("http://localhost:3001/auth/auth", { 
         headers: {
           accessToken: localStorage.getItem("accessToken"),
         }
-      }).then((response) => { // Get user token from routes/Users.js GET request
+    }).then((response) => { // Get user token from routes/Users.js GET request
       if (response.data.error) { // if there is an error in getting the token (invalid token), then we do not give access
         setAuthState({...authState, status: false}); // Change only one attribute in authstate (in this case, we only want to change status to false)
-      } else { // otherwise, we change authState to grant access
-        setAuthState({
+      } else { // otherwise, we change authState to grant access        
+        setAuthState({...authState,
           username: response.data.username, 
           id: response.data.id, 
           status: true,
@@ -68,14 +68,13 @@ function App() {
                 <>
                   <Link to="/">Home Page</Link>
                   <Link to="/createpost">Create Post</Link>
-                  <Link to="/reports">Report</Link>
+                  {/* <Link to="/reports">Report</Link> */}
                 </>
               )}
             </div>
             <div className="loggedInContainer">
-              {/* <Link to={'/profile/${authState.id}'}>{authState.username}</Link> */}
-              <h1>{authState.username} </h1>
-              {authState.status && <button onClick={logout}>Logout</button>}
+              {authState.status && <h2 style={{ color: 'white' }}>{authState.username}</h2>}
+              {authState.status && <Link to="/login" onClick={logout}>Logout</Link>}
             </div>
           </div>
           <Routes>
@@ -84,7 +83,7 @@ function App() {
             <Route path="/post/:id" element={<Post/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/registration" element={<Registration/>}/>
-            <Route path="/reports" element={<Report/>}/>
+            {/* <Route path="/reports" element={<Report/>}/> */}
             <Route path="/profile/:id" element={<Profile/>}/>
             <Route path="/changepassword" element={<ChangePassword/>}/>
             <Route path="*" element={<PageNotFound/>}/>

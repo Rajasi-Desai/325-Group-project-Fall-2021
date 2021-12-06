@@ -26,11 +26,10 @@ router.get("/:userId", async (req, res) => {
 });
 
 // POST Request (Make/File report and add it to database)
-// TODO: Need to assign PostId and UserId
 router.post("/", validateToken, async (req, res) => {
-  const report = req.body; // Access data from req.body
-  // report.PostId = req.post.id; // Get postId
-  // report.UserId = req.user.id; // Get userId
+  const report = req.body.details; // Access data from req.body
+  report.PostId = req.body.postId; // Get postId
+  report.UserId = req.user.id; // Get userId
   await Reports.create(report); // Add report data into database (await to make sure all data is inserted into database before proceeding)
   res.json(report); // Return response in form of json
 });

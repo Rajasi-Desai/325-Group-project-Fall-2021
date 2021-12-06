@@ -9,13 +9,14 @@ const {sign} = require('jsonwebtoken');
 
 // POST Request (Register User)
 router.post("/", async (req, res) => {
-    const {username, password} = req.body; // Get username and password from request
+    const {username, email, password} = req.body; // Get username, emailand password from request
     bcrypt.hash(password, 10).then((hash) => { // Hash original password for encryption purpose
         Users.create({
             username: username, 
+            email: email, 
             password: hash,
         });
-        res.json("SUCCESS");
+        res.json("Registration SUCCESS");
     }); 
 });
 
@@ -50,7 +51,6 @@ router.get("/basicinfo/:id", async (req, res) => {
     const basicInfo = await Users.findByPk(id, {
         attributes: { exclude: ["password"] },
     }); // Get basic info of user based on primary key (pk), excluding password
-
     res.json(basicInfo);
 });
 

@@ -33,6 +33,11 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "cascade", // If post is deleted, then all comments on post get deleted
     });
 
+     // PostId for given dislike (who liked which post)
+     Posts.hasMany(models.Dislikes, { // Get all dislikes from db associated with given post
+      onDelete: "cascade", // If post is deleted, then all comments on post get deleted
+    });
+
     // PostId for given report (which post is the report for)
     Posts.hasMany(models.Reports, { // Get all reports from db associated with given post
       onDelete: "cascade", // If post is deleted, then all comments on post get deleted

@@ -10,6 +10,14 @@ function Login() {
 
     let navigate = useNavigate(); 
     
+    // Function to login via "Enter" key
+    const onEnterKey = (event) => {
+      if(event.key === 'Enter'){
+        login();
+      }
+    }
+
+    // Login user after inputting email and password
     const login = () => {
         const data = {username: username, password: password};
         axios.post("http://localhost:3001/auth/login", data).then((response) => {
@@ -29,10 +37,12 @@ function Login() {
     
     return (
         <div className="loginContainer">
+          <h1>Login</h1>
           <label>Username:</label>
           <input
             type="text"
             autoComplete="off"
+            placeholder="Enter username"
             onChange={(event) => {
               setUsername(event.target.value);
             }}
@@ -41,9 +51,11 @@ function Login() {
           <input
             type="password"
             autoComplete="off"
+            placeholder="Enter password"
             onChange={(event) => {
               setPassword(event.target.value);
             }}
+            onKeyPress={onEnterKey}
           />
           <button onClick={login}> Login </button>
         </div>

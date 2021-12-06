@@ -18,6 +18,8 @@ const reportRouter = require("./routes/Reports"); // Access router from reports
 app.use("/reports", reportRouter);
 const likesRouter = require("./routes/Likes"); // Access router from likes
 app.use("/likes", likesRouter);
+const dislikesRouter = require("./routes/Dislikes"); // Access router from likes
+app.use("/dislikes", dislikesRouter);
 
 db.sequelize.sync().then(() => { 
   app.listen(3001, () => { // use localhost:3001

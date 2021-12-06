@@ -1,15 +1,16 @@
 const express = require("express"); // Get express
 const router = express.Router(); // Access router from express
-const { Posts, Likes } = require("../models"); // Get instance of Posts in models folder
+const { Posts, Likes, Dislikes } = require("../models"); // Get instance of Posts in models folder
 const {validateToken} = require("../middlewares/AuthMiddleware");
 
 // Write requests here for posts
 
 // GET Request (Gets all post from database)
 router.get("/", validateToken, async (req, res) => {
-  const listOfPosts = await Posts.findAll( {include: [Likes]} ); // Get posts from table (plus their likes)
+  const listOfPosts = await Posts.findAll( {include: [Likes, Dislikes]} ); // Get posts from table (plus their likes and dislikes)
   const likedPosts = await Likes.findAll({where: {UserId: req.user.id}}); // Get all likes from table for given user
-  res.json({listOfPosts: listOfPosts, likedPosts: likedPosts}); // Return list of posts and likes in response in form of json
+  const dislikedPosts = await Dislikes.findAll({where: {UserId: req.user.id}}); // Get all dislikes from table for given user
+  res.json({listOfPosts: listOfPosts, likedPosts: likedPosts, dislikedPosts: dislikedPosts}); // Return list of posts, likes and dislikes in response in form of json
 });
 
 // GET Request (Get post with specific id)
@@ -19,12 +20,12 @@ router.get('/byId/:id', async (req, res) => {
   res.json(post);
 });
 
-// GET Request (Get LIST of posts from specific USER id, plus the likes from each post)
+// GET Request (Get LIST of posts from specific USER id, plus the likes/dislikes from each post)
 router.get('/byuserId/:id', async (req, res) => {
   const id = req.params.id;
   const listOfPosts = await Posts.findAll({ 
     where: {UserId: id},
-    include: [Likes], 
+    include: [Likes, Dislikes], 
   });
   res.json(listOfPosts);
 });
