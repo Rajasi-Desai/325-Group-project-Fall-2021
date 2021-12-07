@@ -175,6 +175,11 @@ function Post() {
                     <h1 className="section">Section: {postObject.section}</h1>
                 }
                 
+                <button onClick={() => {
+                    sessionStorage.setItem("PostId", id);
+                    navigate('/reports');
+                }}>Report Post</button>
+
                 <div className="post" id="individual">
                     {(authState.username === postObject.username) ? 
                         <div 
@@ -197,10 +202,7 @@ function Post() {
                     <div className="footer">{postObject.username}</div>
                 </div>
 
-                <button onClick={() => {
-                    sessionStorage.setItem("PostId", id);
-                    navigate('/reports');
-                }}>Report Post</button>
+                
             </div>
             <div className="rightSide">
                 <div className="addCommentContainer">

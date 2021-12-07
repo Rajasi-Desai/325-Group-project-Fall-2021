@@ -11,6 +11,8 @@ function Home() {
     const [listOfFilteredPosts, setListOfFilteredPosts] = useState(listOfPosts); // Constants that has list of posts, and change/set list of posts; initially set as empty []
     const [likedPosts, setLikedPosts] = useState([]); // Constants that has list of likes, and change/set list of likes; initially set as empty []
     const [dislikedPosts, setDislikedPosts] = useState([]); // Constants that has list of dislikes, and change/set list of dislikes; initially set as empty []
+    const [likePostCondition, setLikePostCondition] = useState(false); // Get data of a given post's condition if it has been liked or not.
+    const [dislikePostCondition, setDislikePostCondition] = useState(false); // Get data of a given post's condition if it has been disliked or not.
 
     let navigate = useNavigate();
 
@@ -52,12 +54,12 @@ function Home() {
             setListOfFilteredPosts(listOfFilteredPosts.map((post) => {
                 if (post.id === postId) { // Find the post that we are interacting with by id
                     if (response.data.liked) { // If the post has been liked by user,
-                        sessionStorage.setItem("LikedPostId", postId);
                         return {...post, Likes: [...post.Likes, 0] }; // Add like (and leave anything else on post as is); Note: we are adding zero just to change size
                     } 
                     else { // Otherwise, remove like since the post is being unliked
                         const likesArray = post.Likes;
                         likesArray.pop();
+                        sessionStorage.setItem("LikedPostId", postId);
                         return {...post, Likes: likesArray};
                     }
                 } else { // Otherwise, ignore post
@@ -92,7 +94,19 @@ function Home() {
             }
         });
 
+        // console.log("LikedPostId: " + sessionStorage.getItem("LikedPostId"));
+
         // if (sessionStorage.getItem("LikedPostId") !== null) { // If the post has been liked, then we need to check if "Dislike" is on 
+        //     sessionStorage.removeItem("LikedPostId"); // Remove it
+            
+        //     axios.post("http://localhost:3001/dislikes/exists", 
+        //         {PostId: postId}, 
+        //         {headers: {accessToken: localStorage.getItem("accessToken")}}
+        //     ).then((response) => {
+        //         setDislikePostCondition(response.data.disliked); // Store data for post by Id
+        //         console.log("dislikePostCondition: " + dislikePostCondition);
+        //     });
+            
         //     axios.post(
         //         "http://localhost:3001/dislikes", 
         //         {PostId: postId}, 
@@ -101,10 +115,12 @@ function Home() {
         //         // Modify list of dislikes in the list of filtered posts
         //         setListOfFilteredPosts(listOfFilteredPosts.map((post) => {
         //             if (post.id === postId) { // Find the post that has the id we want
-        //                 if (response.data.disliked) { // If the post already has dislike, then we remove it; otherwise, ignore 
+        //                 if (dislikePostCondition) { // If the post already has dislike, then we remove it; otherwise, ignore 
         //                     const dislikesArray = post.Dislikes;
         //                     dislikesArray.pop();
         //                     return {...post, Dislikes: dislikesArray};
+        //                 } else {
+        //                     return {post};
         //                 }
         //             } else {
         //                 return post;
@@ -118,6 +134,8 @@ function Home() {
         //                     const dislikesArray = post.Dislikes;
         //                     dislikesArray.pop();
         //                     return {...post, Dislikes: dislikesArray};
+        //                 } else {
+        //                     return {post};
         //                 }
         //             } else {
         //                 return post;

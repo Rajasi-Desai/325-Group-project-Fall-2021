@@ -29,6 +29,7 @@ body {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   cursor: pointer;
 }
+
 .post .title {
   flex: 20%;
   border-bottom: 1px solid lightgray;
@@ -61,9 +62,11 @@ body {
   color: white;
   text-decoration: underline;
 }
+
 .footer .username:hover {
-   color: gray;
+   color: rgb(21, 93, 165);
 }
+
 .footer .buttons {
   flex: 50%;
   display: flex;
@@ -127,7 +130,7 @@ body {
 }
 
 .formContainer #inputCreatePostMessage {
-  height: 250px;
+  height: 100px;
   margin-top: 10px;
   margin-bottom: 10px;
   border: 2px solid grey;
@@ -295,6 +298,21 @@ span {
   place-items: center;
 }
 
+.postPage .leftSide button {
+  background-color: dodgerblue;
+  color: white;
+  width: 83%;
+  margin-top: 5%;
+  margin-bottom: -5%;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+}
+
+.postPage .leftSide button:hover {
+  background-color: rgb(21, 93, 165);
+}
+
 .leftSide .postType {
   flex: 50%;
   height: 0%;
@@ -423,16 +441,24 @@ span {
   border: none;
 }
 
+.addCommentContainer button:hover {
+  background-color: rgb(21, 93, 165);
+  color: white;
+  width: 70%;
+  margin-top: 1%;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+}
+
 .addCommentContainer input {
   width: 70%;
   height: 200px;
   border-radius: 8px;
-  /* border: none; */
   overflow: hidden;
   resize: both;
   display: block;
   border: 2px solid dodgerblue;
-  /* width: 70%; */
 }
 
 .rightSide .listOfComments {
@@ -525,7 +551,8 @@ button {
 }
 
 /* TABS */
-.tab-list {  border-bottom: 1px solid #ccc;
+.tab-list {  
+  border-bottom: 1px solid #ccc;
   padding-left: 0;
 }
 

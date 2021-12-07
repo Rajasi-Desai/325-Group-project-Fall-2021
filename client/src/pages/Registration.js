@@ -32,6 +32,7 @@ function Registration() {
     const onSubmit = (data) => { // Data contain username and password from input
         axios.post("http://localhost:3001/auth", data).then((response) => {
             console.log(response.data);
+            alert("You are successfully signed up! You will now be sent to the login in, so please log in with your username and password.");
             navigate("/login"); // Navigate to login page
         });
     };

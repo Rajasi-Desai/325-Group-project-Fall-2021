@@ -28,11 +28,11 @@ function ChangePassword() {
         }).then((response)=> {
             if (response.data.error) { // Check and alert if there is an error
                 alert(response.data.error)
+            } else {
+                alert("Password change successful!");
+                navigate("/");
             }
         });
-
-        alert("Password change successful!");
-        navigate("/");
     };
 
     return (
