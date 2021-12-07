@@ -9,13 +9,14 @@ const {sign} = require('jsonwebtoken');
 
 // POST Request (Register User)
 router.post("/", async (req, res) => {
-    const {username, password} = req.body; // Get username and password from request
+    const {username, email, password} = req.body; // Get username, emailand password from request
     bcrypt.hash(password, 10).then((hash) => { // Hash original password for encryption purpose
         Users.create({
             username: username, 
+            email: email, 
             password: hash,
         });
-        res.json("SUCCESS");
+        res.json("Registration SUCCESS");
     }); 
 });
 
@@ -50,7 +51,6 @@ router.get("/basicinfo/:id", async (req, res) => {
     const basicInfo = await Users.findByPk(id, {
         attributes: { exclude: ["password"] },
     }); // Get basic info of user based on primary key (pk), excluding password
-
     res.json(basicInfo);
 });
 
@@ -60,16 +60,18 @@ router.put("/changepassword", validateToken, async (req, res) => {
     const user = await Users.findOne({ where: { username: req.user.username } }); // Get user with username from db (username is assigned in validateToken)
    
     bcrypt.compare(oldPassword, user.password).then(async (match) => { // Compare password from db to old password converted from input
-        if (!match) res.json({error: "Wrong old password"}); // If old password doesn't match to what is in db, throw error
-
-        // Once login is authenticated, use new password, encrypt it, and update
-        bcrypt.hash(newPassword, 10).then((hash) => { // Hash new password for encryption purpose
-            Users.update(
-                {password: hash}, 
-                {where: {username: req.user.username}},
-            );
-            res.json("Password Updated!");
-        }); 
+        if (!match) {
+            res.json({error: "Wrong old password"}); // If old password doesn't match to what is in db, throw error
+        } else {
+            // Once login is authenticated, use new password, encrypt it, and update
+            bcrypt.hash(newPassword, 10).then((hash) => { // Hash new password for encryption purpose
+                Users.update(
+                    {password: hash}, 
+                    {where: {username: req.user.username}},
+                );
+                res.json("Password Updated!");
+            }); 
+        }
     }); 
 });
 

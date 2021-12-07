@@ -1,38 +1,47 @@
 import React from 'react'
 import axios from "axios"; // Library to make api calls
 import { useEffect, useState } from "react"; // Allows us to run function immediately when page rerenders
-import { Link, useNavigate } from 'react-router-dom';
-import Tabs, { TabPane } from 'rc-tabs';
+import { useNavigate } from 'react-router-dom';
+import { Button, ButtonGroup } from 'react-bootstrap';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import ThumbDownAltIcon from '@material-ui/icons/ThumbDownAlt';
 
 function Home() {
     const [listOfPosts, setListOfPosts] = useState([]); // Constants that has list of posts, and change/set list of posts; initially set as empty []
+    const [listOfFilteredPosts, setListOfFilteredPosts] = useState(listOfPosts); // Constants that has list of posts, and change/set list of posts; initially set as empty []
     const [likedPosts, setLikedPosts] = useState([]); // Constants that has list of likes, and change/set list of likes; initially set as empty []
+    const [dislikedPosts, setDislikedPosts] = useState([]); // Constants that has list of dislikes, and change/set list of dislikes; initially set as empty []
+    const [likePostCondition, setLikePostCondition] = useState(false); // Get data of a given post's condition if it has been liked or not.
+    const [dislikePostCondition, setDislikePostCondition] = useState(false); // Get data of a given post's condition if it has been disliked or not.
 
     let navigate = useNavigate();
 
     useEffect(() => { // When page rerenders, 
         // Want to run GET request from backend's 3001/posts to get data, then
         axios
-            .get("http://localhost:3001/posts", {
+            .get("http://localhost:3001/posts", { // Authenticate
                 headers: {accessToken: localStorage.getItem("accessToken")},
             })
             .then((response) => {
+                // Set list of posts (all posts and filtered posts)
                 setListOfPosts(response.data.listOfPosts);
-                setLikedPosts(response.data.likedPosts);
-                // console.log(response.data.likedPosts);
+                setListOfFilteredPosts(response.data.listOfPosts);
+
+                // Set list of likes for posts
                 setLikedPosts(
                     response.data.likedPosts.map((like) => {
                         return like.PostId;
                     })
                 );
+
+                // Set list of dislikes for posts
+                setDislikedPosts(
+                    response.data.dislikedPosts.map((dislike) => {
+                        return dislike.PostId;
+                    })
+                );
             });
     }, []); // Run once when page is refreshed ([] = empty list of dependencies/states)
-
-    // Show change in filter for tabs on left
-    function callback(e) {
-        console.log(e);
-    };
 
     // Function to add/remove like to post
     const likeAPost = (postId) => {
@@ -41,16 +50,35 @@ function Home() {
             {PostId: postId}, 
             {headers: {accessToken: localStorage.getItem("accessToken")}}
         ).then((response) => {
+            // Modify list of likes in the list of filtered posts
+            setListOfFilteredPosts(listOfFilteredPosts.map((post) => {
+                if (post.id === postId) { // Find the post that we are interacting with by id
+                    if (response.data.liked) { // If the post has been liked by user,
+                        return {...post, Likes: [...post.Likes, 0] }; // Add like (and leave anything else on post as is); Note: we are adding zero just to change size
+                    } 
+                    else { // Otherwise, remove like since the post is being unliked
+                        const likesArray = post.Likes;
+                        likesArray.pop();
+                        sessionStorage.setItem("LikedPostId", postId);
+                        return {...post, Likes: likesArray};
+                    }
+                } else { // Otherwise, ignore post
+                    return post;
+                }
+            }));
+
+            // Modify list of likes in the list of unfiltered posts
             setListOfPosts(listOfPosts.map((post) => {
-                if (post.id === postId) { // Find the post that has the id we want
-                    if (response.data.liked) { // If the post has already been liked by user
-                        return {...post, Likes: [...post.Likes, 0]}; // Remove like (and leave anything else on post as is)
-                    } else { // Otherwise, add like
+                if (post.id === postId) { // Find the post that we are interacting with by id
+                    if (response.data.liked) { // If the post has been liked by user,
+                        return {...post, Likes: [...post.Likes, 0] }; // Add like (and leave anything else on post as is); Note: we are adding zero just to change size
+                    } 
+                    else { // Otherwise, remove like since the post is being unliked
                         const likesArray = post.Likes;
                         likesArray.pop();
                         return {...post, Likes: likesArray};
                     }
-                } else {
+                } else { // Otherwise, ignore post
                     return post;
                 }
             }));
@@ -65,63 +93,203 @@ function Home() {
                 setLikedPosts([...likedPosts, postId]); // Otherwise, add postId to the list, and it will change color of thumbs up icon to indicate like has been added
             }
         });
+
+        // console.log("LikedPostId: " + sessionStorage.getItem("LikedPostId"));
+
+        // if (sessionStorage.getItem("LikedPostId") !== null) { // If the post has been liked, then we need to check if "Dislike" is on 
+        //     sessionStorage.removeItem("LikedPostId"); // Remove it
+            
+        //     axios.post("http://localhost:3001/dislikes/exists", 
+        //         {PostId: postId}, 
+        //         {headers: {accessToken: localStorage.getItem("accessToken")}}
+        //     ).then((response) => {
+        //         setDislikePostCondition(response.data.disliked); // Store data for post by Id
+        //         console.log("dislikePostCondition: " + dislikePostCondition);
+        //     });
+            
+        //     axios.post(
+        //         "http://localhost:3001/dislikes", 
+        //         {PostId: postId}, 
+        //         {headers: {accessToken: localStorage.getItem("accessToken")}}
+        //     ).then((response) => {
+        //         // Modify list of dislikes in the list of filtered posts
+        //         setListOfFilteredPosts(listOfFilteredPosts.map((post) => {
+        //             if (post.id === postId) { // Find the post that has the id we want
+        //                 if (dislikePostCondition) { // If the post already has dislike, then we remove it; otherwise, ignore 
+        //                     const dislikesArray = post.Dislikes;
+        //                     dislikesArray.pop();
+        //                     return {...post, Dislikes: dislikesArray};
+        //                 } else {
+        //                     return {post};
+        //                 }
+        //             } else {
+        //                 return post;
+        //             }
+        //         }));
+    
+        //         // Modify list of dislikes in the list of unfiltered posts
+        //         setListOfPosts(listOfPosts.map((post) => {
+        //             if (post.id === postId) { // Find the post that has the id we want
+        //                 if (response.data.disliked) { // If the post already has dislike, then we remove it; otherwise, ignore 
+        //                     const dislikesArray = post.Dislikes;
+        //                     dislikesArray.pop();
+        //                     return {...post, Dislikes: dislikesArray};
+        //                 } else {
+        //                     return {post};
+        //                 }
+        //             } else {
+        //                 return post;
+        //             }
+        //         }));
+    
+        //         if (dislikedPosts.includes(postId)) { // If post has a dislike on it, then remove it from list to change color, indicating that dislike has been removed 
+        //             setDislikedPosts(
+        //                 dislikedPosts.filter((id) => {
+        //                     return id !== postId;
+        //                 })
+        //             );
+        //         } else {
+        //             setDislikedPosts([...dislikedPosts, postId]); // Otherwise, add postId to the list, and it will change color of thumbs down icon to indicate dislike has been added
+        //         } 
+        //     });
+        // }
+    };
+
+    // Function to add/remove dislike to post
+    const dislikeAPost = (postId) => {
+        axios.post(
+            "http://localhost:3001/dislikes", 
+            {PostId: postId}, 
+            {headers: {accessToken: localStorage.getItem("accessToken")}}
+        ).then((response) => {
+            // Modify list of dislikes in the list of filtered posts
+            setListOfFilteredPosts(listOfFilteredPosts.map((post) => {
+                if (post.id === postId) { // Find the post that has the id we want
+                    if (response.data.disliked) { // If the post has been disliked by user
+                        return {...post, Dislikes: [...post.Dislikes, 0]}; // Add dislike (and leave anything else on post as is)
+                    } else { // Otherwise, remove dislike since the post is being un-disliked
+                        const dislikesArray = post.Dislikes;
+                        dislikesArray.pop();
+                        return {...post, Dislikes: dislikesArray};
+                    }
+                } else {
+                    return post;
+                }
+            }));
+
+            // Modify list of dislikes in the list of unfiltered posts
+            setListOfPosts(listOfPosts.map((post) => {
+                if (post.id === postId) { // Find the post that has the id we want
+                    if (response.data.disliked) { // If the post has been disliked by user
+                        return {...post, Dislikes: [...post.Dislikes, 0]}; // Add dislike (and leave anything else on post as is)
+                    } else { // Otherwise, remove dislike since the post is being un-disliked
+                        const dislikesArray = post.Dislikes;
+                        dislikesArray.pop();
+                        return {...post, Dislikes: dislikesArray};
+                    }
+                } else {
+                    return post;
+                }
+            }));
+
+            if (dislikedPosts.includes(postId)) { // If post has a dislike on it, then remove it from list to change color, indicating that dislike has been removed 
+                setDislikedPosts(
+                    dislikedPosts.filter((id) => {
+                        return id !== postId;
+                    })
+                );
+            } else {
+                setDislikedPosts([...dislikedPosts, postId]); // Otherwise, add postId to the list, and it will change color of thumbs down icon to indicate dislike has been added
+            } 
+        });
+
+        // axios.post(
+        //     "http://localhost:3001/likes", 
+        //     {PostId: postId}, 
+        //     {headers: {accessToken: localStorage.getItem("accessToken")}}
+        // ).then((response) => {
+        //     setListOfPosts(listOfPosts.map((post) => {
+        //         if (post.id === postId) { // Find the post that has the id we want
+        //             if (dislikeOn === true && response.data.liked) { // If the post has already been liked by user
+        //                 return {...post, Likes: [...post.Likes, 0]}; // Remove like (and leave anything else on post as is)
+        //             } else {
+        //                 return post;
+        //             }
+        //         } else {
+        //             return post;
+        //         }
+        //     }));
+
+        //     if (likedPosts.includes(postId)) { // If post has like on it, then remove it from list to change color, indicating that like has been removed 
+        //         setLikedPosts(
+        //             likedPosts.filter((id) => {
+        //                 return id !== postId;
+        //             })
+        //         );
+        //     }
+        // });
+    };
+
+    // Function to filter feed of posts based on the Section
+    const filterFeed = (sect) => {
+        // If we want to filter feed specifically
+        if (sect.toString().length > 0) {
+            setListOfFilteredPosts(listOfPosts.filter(post => post.section.toString() === sect.toString()));
+        } else {
+            // Otherwise, show all posts
+            setListOfFilteredPosts(listOfPosts); 
+        }
     };
 
     return (
         <div>
             <div className="postPage">
                 <div className="leftHome">
-                    <Tabs defaultActiveKey="0" onChange={callback}>
-                        <TabPane tab="Home" key="0">
-                        
-                        </TabPane>
-                        <TabPane tab="CS-121" key="1">
-                        
-                        </TabPane>
-                        <TabPane tab="CS-186" key="2">
-                        
-                        </TabPane>
-                        <TabPane tab="CS-187" key="3">
-                        
-                        </TabPane>
-                        <TabPane tab="CS-220" key="4">
-                        
-                        </TabPane>
-                        <TabPane tab="CS-230" key="5">
-                        
-                        </TabPane>
-                        <TabPane tab="Interview" key="6">
-                        
-                        </TabPane>
-                    </Tabs>
+                    <ButtonGroup className="leftHomeBttnCol" vertical>
+                        <Button onClick={() => filterFeed("")}>Home</Button>
+                        <Button onClick={() => filterFeed("CS-121")}>CS-121</Button>
+                        <Button onClick={() => filterFeed("CS-186")}>CS-186</Button>
+                        <Button onClick={() => filterFeed("CS-187")}>CS-187</Button>
+                        <Button onClick={() => filterFeed("CS-220")}>CS-220</Button>
+                        <Button onClick={() => filterFeed("CS-230")}>CS-230</Button>
+                        <Button onClick={() => filterFeed("Interview")}>Interview</Button>
+                    </ButtonGroup>
                 </div>
                 <div className="middleHome">
-                    {listOfPosts.map((value, key) => { // value = every object in listOfPosts
-                        return (
-                        <div className="post"> 
-                            <div className="title">{value.title}</div>
-                            <div className="body" onClick={() => {navigate(`/post/${value.id}`)}}>{value.postText}</div>
-                            <div className="footer">
-                                <div className="username">
-                                    <Link to={`/profile/${value.UserId}`}>{value.username}</Link>
-                                </div>
-                                <div className="buttons">
-                                    <ThumbUpAltIcon
-                                        onClick={() => {
-                                            likeAPost(value.id);
-                                        }}
-                                        className={likedPosts.includes(value.id) ? "unlikeBttn" : "likeBttn"}
-                                    />
-                                    <label> {value.Likes.length}</label>
+                    {listOfFilteredPosts
+                        .sort((a, b) => b.createdAt.localeCompare(a.createdAt)) // Sort posts so latest one shows up on top
+                        .map((value) => { // value = every object in listOfPosts
+                            return (
+                            <div className="post"> 
+                                <div className="title">{value.section} {value.postType}: {value.title}</div>
+                                <div className="body" onClick={() => {navigate(`/post/${value.id}`)}}>{value.postText}</div>
+                                <div className="footer">
+                                    <div className="username">
+                                        <p onClick={() => {navigate(`/profile/${value.UserId}`)}}>{value.username}</p>
+                                    </div>
+                                    <div className="buttons">
+                                        <ThumbUpAltIcon
+                                            onClick={() => {
+                                                likeAPost(value.id);
+                                            }}
+                                            className={likedPosts.includes(value.id) ? "unlikeBttn" : "likeBttn"}
+                                        />
+                                        <label> {value.Likes.length}</label>
+                                        <ThumbDownAltIcon
+                                            onClick={() => {
+                                                dislikeAPost(value.id);
+                                            }}
+                                            className={dislikedPosts.includes(value.id) ? "unlikeBttn" : "likeBttn"}
+                                        />
+                                        <label> {value.Dislikes.length}</label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        );
-                    })}
+                            );
+                        }
+                    )}
                 </div>
-                <div className="rightHome">
-                    Profile
-                </div>
+                <div className="rightHome"></div>
             </div>
         </div>
     )

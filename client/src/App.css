@@ -29,6 +29,7 @@ body {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   cursor: pointer;
 }
+
 .post .title {
   flex: 20%;
   border-bottom: 1px solid lightgray;
@@ -58,12 +59,20 @@ body {
 
 .footer .username {
   flex: 50%;
+  color: white;
+  text-decoration: underline;
 }
+
+.footer .username:hover {
+   color: rgb(21, 93, 165);
+}
+
 .footer .buttons {
   flex: 50%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  margin-right: 5px;
 }
 
 .likeBttn {
@@ -99,6 +108,7 @@ body {
 }
 
 .formContainer {
+  margin-top: 25px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -119,18 +129,49 @@ body {
   font-size: 20px;
 }
 
+.formContainer #inputCreatePostMessage {
+  height: 100px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 2px solid grey;
+  border-radius: 5px;
+  padding-left: 10px;
+  font-size: 20px;
+}
+
+.formContainer #inputReport {
+  height: 40px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 2px solid grey;
+  border-radius: 5px;
+  padding-left: 10px;
+  font-size: 20px;
+}
+
+.formContainer #inputReportDetails {
+  height: 200px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 2px solid grey;
+  border-radius: 5px;
+  padding-left: 10px;
+  font-size: 20px;
+}
+
 .formContainer button {
   margin-top: 15px;
   height: 40px;
   border: none;
-  background-color: lightskyblue;
+  background-color: dodgerblue;
   border-radius: 5px;
   color: white;
+  position: center;
 }
 
 .formContainer button:hover {
   cursor: pointer;
-  background-color: dodgerblue;
+  background-color: rgb(25, 108, 190);
 }
 
 span {
@@ -161,6 +202,7 @@ span {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  padding-right: 35px;
 }
 
 .navbar a {
@@ -185,7 +227,7 @@ span {
 }
 
 /* INDIVIDUAL POST */
-.postPage {
+.addcommentcontainer {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -208,26 +250,20 @@ span {
 
 .leftHome {
   flex: 20%;
-  /* height: calc(100vh - 70px); */
-  /* display: grid; */
-  /* place-items: start; */
-  /* justify-items: start; */
   position: fixed;
   left:10px
 }
 
+.leftHomeBttnCol {
+  top:10px;
+}
+
 .middleHome {
   flex: 60%;
-  /* height: calc(100vh - 70px);
-  display: grid;
-  place-items: center; */
 }
 
 .rightHome {
   flex: 20%;
-  /* height: calc(100vh - 70px);
-  display: grid;
-  place-items: end; */
   position: fixed;
   right:10px
 }
@@ -254,11 +290,115 @@ span {
   height: 100%;
 }
 
-.leftSide {
+.postPage .leftSide {
   flex: 50%;
-  height: calc(100vh - 70px);
+  height: calc(70vh - 70px);
+  margin-top: 0px;
   display: grid;
   place-items: center;
+}
+
+.postPage .leftSide button {
+  background-color: dodgerblue;
+  color: white;
+  width: 83%;
+  margin-top: 5%;
+  margin-bottom: -5%;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+}
+
+.postPage .leftSide button:hover {
+  background-color: rgb(21, 93, 165);
+}
+
+.leftSide .postType {
+  flex: 50%;
+  height: 0%;
+  display: grid;
+  place-items: left;
+  text-decoration-color: black;
+}
+
+.leftSide .postTypeEditEnabled {
+  flex: 50%;
+  height: 0%;
+  display: grid;
+  place-items: left;
+  text-decoration: underline;
+  text-decoration-color: black;
+}
+
+.leftSide .postTypeEditEnabled:hover {
+  cursor: pointer;
+  text-decoration-color: lightgray;
+}
+
+.leftSide .section {
+  flex: 50%;
+  height: 0%;
+  display: grid;
+  place-items: left;
+  text-decoration-color: black;
+}
+
+.leftSide .sectionEditEnabled {
+  flex: 50%;
+  height: 0%;
+  display: grid;
+  place-items: left;
+  text-decoration: underline;
+  text-decoration-color: black;
+}
+
+.leftSide .sectionEditEnabled:hover {
+  cursor: pointer;
+  text-decoration-color: lightgray;
+}
+
+.leftSide .post .title {
+  text-decoration-color: black;
+}
+
+.leftSide .post .titleEditEnabled {
+  text-decoration: underline white;
+  text-decoration-color: white;
+  flex: 20%;
+  border-bottom: 1px solid lightgray;
+  background-color: dodgerblue;
+  display: grid;
+  place-content: center;
+  color: white;
+}
+
+.leftSide .post .titleEditEnabled:hover {
+  cursor: pointer;
+  text-decoration-color: gray;
+  text-decoration: underline gray;
+}
+
+.leftSide .post .body {
+  text-decoration-color: black;
+}
+
+.leftSide .post .bodyEditEnabled {
+  flex: 60%;
+  display: grid;
+  place-content: center;
+  text-decoration: underline;
+  text-decoration-color: black;
+  text-align: center;
+}
+
+.leftSide .post .bodyEditEnabled:hover {
+  cursor: pointer;
+  text-decoration-color: lightgray;
+}
+
+.leftSide .post .footer {
+  flex: 20%;
+  text-decoration-color: black;
 }
 
 .rightSide {
@@ -275,41 +415,79 @@ span {
   width: 100%;
   display: grid;
   place-items: center;
-  margin-top: 25px;
+  height: 40px;
+  margin-top: 60px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+  font-size: 20px;
 }
 
-.addCommentContainer input,
-button {
-  width: 200px;
+.leftSide button {
+  width: 47%;
   height: 50px;
   border-radius: 8px;
   border: none;
+  background-color: dodgerblue;
+  color: white;
 }
 
 .addCommentContainer button {
   background-color: dodgerblue;
   color: white;
+  width: 70%;
+  margin-top: 1%;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+}
+
+.addCommentContainer button:hover {
+  background-color: rgb(21, 93, 165);
+  color: white;
+  width: 70%;
+  margin-top: 1%;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
 }
 
 .addCommentContainer input {
+  width: 70%;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  resize: both;
+  display: block;
   border: 2px solid dodgerblue;
 }
 
 .rightSide .listOfComments {
   flex: 80%;
   width: 100%;
+  margin-top: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .listOfComments .comment {
+  width: 100%;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.listOfComments .commentAndDelete {
   width: 70%;
-  height: auto;
-  padding: 30px;
-  border: 1px solid lightgray;
-  border-radius: 5px;
+  height: 50%;
+  border: 1px solid dodgerblue;
+  border-radius: 10px;
+  padding: 10px;
   margin-top: 20px;
+  display: flex;
+  flex-direction: row;
 }
 
 #individual {
@@ -318,37 +496,54 @@ button {
 }
 
 #individual .title,
+#individual .titleEditEnabled,
 #individual .footer {
   font-size: 30px;
 }
 
-#individual .body {
+#individual .body,
+#individual .bodyEditEnabled {
   font-size: 25px;
 }
 
 /* LOGIN */
 
 .loginContainer {
+  margin-top: 25px;
   display: flex;
-  align-items: center;
   flex-direction: column;
-  width: 100%;
-  height: 100vh;
-  padding-top: 100px;
+  justify-content: center;
+  width: 500px;
+  height: auto;
+  padding: 20px;
+  border: 5px solid dodgerblue;
+  border-radius: 5px;
 }
 
 .loginContainer input,
 button {
-  width: 200px;
-  height: 50px;
-  border-radius: 8px;
-  border: none;
-  margin: 10px;
+  height: 40px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 2px solid grey;
+  border-radius: 5px;
+  padding-left: 10px;
+  font-size: 20px;
 }
 
 .loginContainer button {
+  margin-top: 15px;
+  height: 40px;
+  border: none;
   background-color: dodgerblue;
+  border-radius: 5px;
   color: white;
+  position: center;
+}
+
+.loginContainer button:hover {
+  cursor: pointer;
+  background-color: rgb(25, 108, 190);
 }
 
 .loginContainer input {
@@ -356,7 +551,8 @@ button {
 }
 
 /* TABS */
-.tab-list {  border-bottom: 1px solid #ccc;
+.tab-list {  
+  border-bottom: 1px solid #ccc;
   padding-left: 0;
 }
 

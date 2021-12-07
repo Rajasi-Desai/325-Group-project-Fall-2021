@@ -3,7 +3,7 @@ const router = express.Router(); // Access router from express
 const { Likes } = require("../models"); // Get instance of Posts in models folder
 const { validateToken } = require("../middlewares/AuthMiddleware"); // Get validateToken
 
-// POST request (Add like to post)
+// POST request (Add/Remove like to post)
 router.post("/", validateToken, async (req, res) => {
     const {PostId} = req.body;
     const UserId = req.user.id;

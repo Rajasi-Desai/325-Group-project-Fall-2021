@@ -4,6 +4,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -11,11 +15,23 @@ module.exports = (sequelize, DataTypes) => {
     });
   
     Users.associate = (models) => {
-      Users.hasMany(models.Likes, { // Get all likes from db associated with given post
+      // Get UserId for likes
+      Users.hasMany(models.Likes, { // Get all likes from db associated with given user
         onDelete: "cascade", // If post is deleted, then all comments on post get deleted
       });
 
-      Users.hasMany(models.Posts, { // Get all posts from db associated with given post
+      // Get UserId for dislikes
+      Users.hasMany(models.Dislikes, { // Get all dislikes from db associated with given user
+        onDelete: "cascade", // If post is deleted, then all comments on post get deleted
+      });
+
+      // Get UserId for posts
+      Users.hasMany(models.Posts, { // Get all posts from db associated with given user
+        onDelete: "cascade",
+      });
+
+      // Get UserId for reports
+      Users.hasMany(models.Reports, { // Get all reports from db associated with given user
         onDelete: "cascade",
       });
     }
